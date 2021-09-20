@@ -27,5 +27,53 @@ public class MathBotTest {
     assertEquals(1, output, 0.01);
   }
 
-  // TODO: add more unit tests of your own
+  @Test
+  public void testAddZero() {
+    MathBot mathBot = new MathBot();
+    double output = mathBot.add(0, 0);
+    assertEquals(0, output, 0.01);
+  }
+
+  @Test
+  public void testAddNegative() {
+    MathBot mathBot = new MathBot();
+    double output = mathBot.add(-10, -20);
+    assertEquals(-30, output, 0.01);
+  }
+
+  @Test
+  public void testAddDecimal() {
+    MathBot mathBot = new MathBot();
+    double output = mathBot.add(10.628000, 1.00000000);
+    assertEquals(11.628, output, 0.01);
+  }
+
+  @Test
+  public void testSubtractZero() {
+    MathBot mathBot = new MathBot();
+    double output = mathBot.subtract(0, 0);
+    assertEquals(0, output, 0.01);
+  }
+
+  @Test
+  public void testSubtractNegative() {
+    MathBot mathBot = new MathBot();
+    double output = mathBot.subtract(-100, -10);
+    assertEquals(-90, output, 0.01);
+  }
+
+  @Test
+  public void testSubtractDecimal() {
+    MathBot mathBot = new MathBot();
+    double output = mathBot.subtract(10.01, 1.01);
+    assertEquals(9.0, output, 0.01);
+  }
+
+  @Test
+  public void testSubtractNegativeToPositive() {
+    MathBot mathBot = new MathBot();
+    double output = mathBot.subtract(-1, -10.10);
+    assertEquals(9.10, output, 0.01);
+  }
+
 }
