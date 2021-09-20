@@ -60,16 +60,57 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
     }
 
-    // TODO: Add your REPL here!
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
       String input;
+      CSVReader reader = null;
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
           String[] arguments = input.split(" ");
-          System.out.println(arguments[0]);
-          // TODO: complete your REPL by adding commands for addition "add" and subtraction
-          //  "subtract"
+          if (arguments[0].equals("stars")) {
+            reader = new CSVReader();
+            reader.readFile(arguments[1]);
+          }
+          if (arguments[0].equals("naive_neighbors")) {
+            if (reader == null) {
+              continue; //ensures that naive_neighbors command can't be run without data
+            }
+            if (arguments[2].startsWith("\"")) {
+              //These lines ensure that the full name is passed to nameSort
+              StringBuilder properName = new StringBuilder(arguments[2]);
+              if (!properName.toString().endsWith("\"")) {
+                for (int i = 3; i < arguments.length; i++) {
+                  properName.append(arguments[i]);
+                  if (arguments[i].contains("\"")) {
+                    break;
+                  }
+                }
+              }
+              if (arguments[1].equals("1")) {
+                continue;
+              }
+              reader.nameSort(Integer.parseInt(arguments[1]), properName.toString());
+            } else {
+              reader.coordinateSort(Integer.parseInt(arguments[1]),
+                  Double.parseDouble(arguments[2]),
+                  Double.parseDouble(arguments[3]), Double.parseDouble(arguments[4]));
+            }
+          } else if (reader != null && !arguments[0].equals("stars")) {
+            System.out.println("ERROR:");
+          }
+
+          MathBot mathbot = new MathBot();
+          if (arguments[0].equals("add")) {
+            double sum = mathbot.add(Double.parseDouble(arguments[1]),
+                Double.parseDouble(arguments[2]));
+            System.out.println(sum);
+          }
+          if (arguments[0].equals("subtract")) {
+            double difference = mathbot.subtract(Double.parseDouble(arguments[1]),
+                Double.parseDouble(arguments[2]));
+            System.out.println(difference);
+          }
+
         } catch (Exception e) {
           // e.printStackTrace();
           System.out.println("ERROR: We couldn't process your input");
@@ -79,7 +120,6 @@ public final class Main {
       e.printStackTrace();
       System.out.println("ERROR: Invalid input for REPL");
     }
-
   }
 
   private static FreeMarkerEngine createEngine() {
